@@ -1,9 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
-const User = require('./').user;
-const Adress = require('./').adress;
 module.exports = (sequelize, DataTypes) => {
-	class userAdressJunc extends Model {
+	class Country extends Model {
 		/**
 		 * Helper method for defining associations.
 		 * This method is not a part of Sequelize lifecycle.
@@ -13,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
 			// define association here
 		}
 	}
-	userAdressJunc.init(
+	Country.init(
 		{
 			id: {
 				type: DataTypes.UUID,
@@ -22,17 +20,21 @@ module.exports = (sequelize, DataTypes) => {
 				allowNull: false,
 				autoIncrement: false,
 			},
+			name: {
+				type: DataTypes.STRING(28),
+				allowNull: false,
+			},
 		},
 		{
 			sequelize,
-			modelName: 'userAdressJunc',
+			modelName: 'Country',
 		}
 	);
-
-	Order.associate = (models) => {
-		userAdressJunc.belongsTo(User);
-		userAdressJunc.belongsTo(Adress);
+	Country.associate = (models) => {
+		Country.hasMany(models.User, {
+			onDelete: 'cascade',
+			onUpdate: 'cascade',
+		});
 	};
-
-	return userAdressJunc;
+	return Country;
 };

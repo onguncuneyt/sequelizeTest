@@ -13,6 +13,13 @@ module.exports = (sequelize, DataTypes) => {
 	}
 	Adress.init(
 		{
+			id: {
+				type: DataTypes.UUID,
+				primaryKey: true,
+				defaultValue: DataTypes.UUIDV4,
+				allowNull: false,
+				autoIncrement: false,
+			},
 			title: {
 				type: DataTypes.STRING(28),
 				allowNull: false,
@@ -20,15 +27,22 @@ module.exports = (sequelize, DataTypes) => {
 			fullAdress: {
 				type: DataTypes.STRING(120),
 				allowNull: false,
+				validate: {
+					len: [10, 120],
+				},
 			},
 		},
+
 		{
 			sequelize,
 			modelName: 'Adress',
 		}
 	);
 	Adress.associate = (models) => {
-		Adress.hasMany(models.userAdressJunc);
+		Adress.belongsTo(models.User, {
+			onDelete: 'cascade',
+			onUpdate: 'cascade',
+		});
 	};
 	return Adress;
 };

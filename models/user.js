@@ -20,6 +20,12 @@ module.exports = (sequelize, DataTypes) => {
 				allowNull: false,
 				autoIncrement: false,
 			},
+			CountryId: {
+				type: DataTypes.STRING,
+				foreignKey: true,
+				allowNull: false,
+				autoIncrement: false,
+			},
 			userName: {
 				type: DataTypes.STRING(28),
 				allowNull: false,
@@ -37,7 +43,15 @@ module.exports = (sequelize, DataTypes) => {
 	);
 
 	User.associate = (models) => {
-		User.hasMany(models.userAdressJunc);
+		User.hasMany(models.Adress, {
+			onDelete: 'cascade',
+			onUpdate: 'cascade',
+			as: 'Adresses', //sorgu yaparkenki as'i burada kendim belirleyebilirim
+		});
+		User.belongsTo(models.Country, {
+			onDelete: 'cascade',
+			onUpdate: 'cascade',
+		});
 	};
 	return User;
 };

@@ -1,7 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-	class User extends Model {
+	class CartItems extends Model {
 		/**
 		 * Helper method for defining associations.
 		 * This method is not a part of Sequelize lifecycle.
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
 			// define association here
 		}
 	}
-	User.init(
+	CartItems.init(
 		{
 			id: {
 				type: DataTypes.UUID,
@@ -20,46 +20,26 @@ module.exports = (sequelize, DataTypes) => {
 				allowNull: false,
 				autoIncrement: false,
 			},
-			CountryId: {
-				type: DataTypes.UUID,
-				foreignKey: true,
-				allowNull: false,
-				autoIncrement: false,
-			},
-			userName: {
-				type: DataTypes.STRING(28),
-				allowNull: false,
-			},
-
-			email: {
-				type: DataTypes.STRING(28),
+			quantity: {
+				type: DataTypes.INTEGER,
 				allowNull: false,
 			},
 		},
 		{
 			sequelize,
-			modelName: 'User',
+			modelName: 'CartItems',
 		}
 	);
 
-	User.associate = (models) => {
-		User.hasMany(models.Adress, {
-			onDelete: 'cascade',
-			onUpdate: 'cascade',
-			//as: 'Adresses', //sorgu yaparkenki as'i burada kendim belirleyebilirim
-		});
-		User.belongsTo(models.Country, {
+	CartItems.associate = (models) => {
+		CartItems.belongsTo(models.SellerProducts, {
 			onDelete: 'cascade',
 			onUpdate: 'cascade',
 		});
-		User.hasMany(models.Order, {
-			onDelete: 'cascade',
-			onUpdate: 'cascade',
-		});
-		User.hasMany(models.Cart, {
+		CartItems.belongsTo(models.Cart, {
 			onDelete: 'cascade',
 			onUpdate: 'cascade',
 		});
 	};
-	return User;
+	return CartItems;
 };

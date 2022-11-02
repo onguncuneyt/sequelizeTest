@@ -1,7 +1,8 @@
 'use strict';
 const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
-	class User extends Model {
+	class SellerProducts extends Model {
 		/**
 		 * Helper method for defining associations.
 		 * This method is not a part of Sequelize lifecycle.
@@ -11,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
 			// define association here
 		}
 	}
-	User.init(
+	SellerProducts.init(
 		{
 			id: {
 				type: DataTypes.UUID,
@@ -20,46 +21,45 @@ module.exports = (sequelize, DataTypes) => {
 				allowNull: false,
 				autoIncrement: false,
 			},
-			CountryId: {
-				type: DataTypes.UUID,
-				foreignKey: true,
-				allowNull: false,
-				autoIncrement: false,
-			},
-			userName: {
-				type: DataTypes.STRING(28),
+			price: {
+				type: DataTypes.FLOAT,
 				allowNull: false,
 			},
-
-			email: {
-				type: DataTypes.STRING(28),
+			quantity: {
+				type: DataTypes.INTEGER,
 				allowNull: false,
 			},
 		},
+
 		{
 			sequelize,
-			modelName: 'User',
+			modelName: 'SellerProducts',
+			indexes: [
+				{
+					unique: true,
+					fields: ['SellerId', 'ProductId'],
+				},
+			],
 		}
 	);
-
-	User.associate = (models) => {
-		User.hasMany(models.Adress, {
-			onDelete: 'cascade',
-			onUpdate: 'cascade',
-			//as: 'Adresses', //sorgu yaparkenki as'i burada kendim belirleyebilirim
-		});
-		User.belongsTo(models.Country, {
-			onDelete: 'cascade',
-			onUpdate: 'cascade',
-		});
-		User.hasMany(models.Order, {
+	SellerProducts.associate = (models) => {
+		// SellerProducts.belongsToMany(models.Cart, {
+		// 	onDelete: 'cascade',
+		// 	onUpdate: 'cascade',
+		// 	through: models.CartItems,
+		// });
+		SellerProducts.hasMany(models.CartItems, {
 			onDelete: 'cascade',
 			onUpdate: 'cascade',
 		});
-		User.hasMany(models.Cart, {
+		SellerProducts.belongsTo(models.Product, {
+			onDelete: 'cascade',
+			onUpdate: 'cascade',
+		});
+		SellerProducts.belongsTo(models.Seller, {
 			onDelete: 'cascade',
 			onUpdate: 'cascade',
 		});
 	};
-	return User;
+	return SellerProducts;
 };

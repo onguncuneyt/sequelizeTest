@@ -1,7 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-	class User extends Model {
+	class Seller extends Model {
 		/**
 		 * Helper method for defining associations.
 		 * This method is not a part of Sequelize lifecycle.
@@ -11,18 +11,12 @@ module.exports = (sequelize, DataTypes) => {
 			// define association here
 		}
 	}
-	User.init(
+	Seller.init(
 		{
 			id: {
 				type: DataTypes.UUID,
 				primaryKey: true,
 				defaultValue: DataTypes.UUIDV4,
-				allowNull: false,
-				autoIncrement: false,
-			},
-			CountryId: {
-				type: DataTypes.UUID,
-				foreignKey: true,
 				allowNull: false,
 				autoIncrement: false,
 			},
@@ -38,28 +32,24 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		{
 			sequelize,
-			modelName: 'User',
+			modelName: 'Seller',
 		}
 	);
 
-	User.associate = (models) => {
-		User.hasMany(models.Adress, {
-			onDelete: 'cascade',
-			onUpdate: 'cascade',
-			//as: 'Adresses', //sorgu yaparkenki as'i burada kendim belirleyebilirim
-		});
-		User.belongsTo(models.Country, {
-			onDelete: 'cascade',
-			onUpdate: 'cascade',
-		});
-		User.hasMany(models.Order, {
+	Seller.associate = (models) => {
+		// Seller.belongsToMany(models.Product, {
+		// 	onDelete: 'cascade',
+		// 	onUpdate: 'cascade',
+		// 	through: models.SellerProducts,
+		// });
+		Seller.hasMany(models.Order, {
 			onDelete: 'cascade',
 			onUpdate: 'cascade',
 		});
-		User.hasMany(models.Cart, {
+		Seller.hasMany(models.SellerProducts, {
 			onDelete: 'cascade',
 			onUpdate: 'cascade',
 		});
 	};
-	return User;
+	return Seller;
 };

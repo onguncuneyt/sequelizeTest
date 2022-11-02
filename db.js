@@ -1,7 +1,6 @@
 const models = require('./models');
-
 models.sequelize
-	.sync({ alter: false }) //degisiklik icin true yap
+	.sync({ alter: true }) //degisiklik icin true yap
 	.then((result) => {
 		console.log('DB Connected');
 	})

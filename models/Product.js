@@ -1,7 +1,9 @@
 'use strict';
 const { Model } = require('sequelize');
+const seller_product = require('./').seller_product;
+
 module.exports = (sequelize, DataTypes) => {
-	class Adress extends Model {
+	class Product extends Model {
 		/**
 		 * Helper method for defining associations.
 		 * This method is not a part of Sequelize lifecycle.
@@ -11,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
 			// define association here
 		}
 	}
-	Adress.init(
+	Product.init(
 		{
 			id: {
 				type: DataTypes.UUID,
@@ -20,33 +22,27 @@ module.exports = (sequelize, DataTypes) => {
 				allowNull: false,
 				autoIncrement: false,
 			},
-			title: {
-				type: DataTypes.STRING(28),
+			name: {
+				type: DataTypes.STRING(30),
 				allowNull: false,
-			},
-			fullAdress: {
-				type: DataTypes.STRING(120),
-				allowNull: false,
-				validate: {
-					len: [10, 120],
-				},
 			},
 		},
-
 		{
 			sequelize,
-			modelName: 'Adress',
+			modelName: 'Product',
 		}
 	);
-	Adress.associate = (models) => {
-		Adress.belongsTo(models.User, {
-			onDelete: 'cascade',
-			onUpdate: 'cascade',
-		});
-		Adress.hasOne(models.Cart, {
+
+	Product.associate = (models) => {
+		// Product.belongsToMany(models.Seller, {
+		// 	onDelete: 'cascade',
+		// 	onUpdate: 'cascade',
+		// 	through: models.SellerProducts,
+		// });
+		Product.hasMany(models.SellerProducts, {
 			onDelete: 'cascade',
 			onUpdate: 'cascade',
 		});
 	};
-	return Adress;
+	return Product;
 };
